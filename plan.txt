@@ -1,0 +1,57 @@
+I am building a major project titled Automated Badminton Match Analysis using Deep Learning.
+
+Here is my project summary
+
+ Detect players and shuttlecock using YOLOv8
+ Track shuttlecock using Kalman Filter
+ Perform multi-object tracking (players)
+ Segment rallies and determine points
+ Compute player metrics (distance, speed, heatmaps)
+ Use single-camera (monocular) video
+ Apply homography to map 2D image coordinates to real-world court
+
+I want you to act as a senior computer vision engineer and help me IMPLEMENT this project step-by-step.
+
+Follow these rules strictly
+
+1. Break the project into clear modules (data, detection, tracking, analytics, UI)
+2. For each module
+
+    Explain what needs to be done
+    Provide clean, working Python code
+    Mention libraries to install
+    Suggest folder structure
+3. Keep the solution practical and runnable on a laptop (no overengineering)
+4. Prefer YOLOv8 (Ultralytics), OpenCV, NumPy, and PyTorch
+5. Use real-world engineering practices (modular code, reusable functions)
+
+Project Requirements
+
+ Input badminton match video
+ Output
+
+   Player tracking
+   Shuttle trajectory
+   Rally segmentation
+   InOut detection (basic version is fine)
+   Player statistics (distance, speed)
+   Heatmaps
+
+Important
+
+ Start with a minimal working pipeline first (detect + track)
+ Then gradually improve (metrics, homography, analytics)
+ Explain every step clearly
+
+Also help me with
+
+ Dataset sources (Roboflow links already available)
+ Training YOLOv8 custom model
+ Handling fast shuttle movement
+ Debugging common issues
+
+Finally
+Guide me like I am building this for my major project evaluation and demo.
+
+Start with
+👉 Step 1 Project architecture + folder structure + setup instructions

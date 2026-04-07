@@ -1,0 +1,39 @@
+badminton-analysis/
+│
+├── data/
+│   ├── raw_videos/
+│   ├── frames/
+│   ├── annotations/
+│   └── dataset.yaml
+│
+├── models/
+│   ├── yolo/
+│   └── weights/
+│
+├── src/
+│   ├── detection/
+│   │   └── yolo_detector.py
+│   │
+│   ├── tracking/
+│   │   ├── player_tracker.py
+│   │   └── shuttle_tracker.py
+│   │
+│   ├── analytics/
+│   │   ├── metrics.py
+│   │   ├── rally_detection.py
+│   │   └── heatmap.py
+│   │
+│   ├── utils/
+│   │   ├── video_utils.py
+│   │   ├── drawing.py
+│   │   └── homography.py
+│   │
+│   └── main.py
+│
+├── outputs/
+│   ├── videos/
+│   ├── logs/
+│   └── heatmaps/
+│
+├── requirements.txt
+└── README.md
