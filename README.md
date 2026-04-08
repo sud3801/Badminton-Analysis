@@ -23,43 +23,64 @@ This is a major project developed for evaluation and demonstration purposes, sho
 badminton-analysis/
 │
 ├── data/
-│   ├── raw_videos/          # Input badminton match videos
-│   ├── frames/              # Extracted video frames
+│   ├── datasets.yaml        # Dataset configuration
 │   ├── annotations/         # Annotation data
-│   └── datasets.yaml        # Dataset configuration
+│   ├── frames/              # Extracted video frames
+│   ├── raw_videos/          # Input badminton match videos
+│   └── shuttlecock/         # Shuttlecock detection dataset
+│       ├── data.yaml        # Dataset YAML for YOLO training
+│       ├── README.dataset.txt
+│       ├── README.roboflow.txt
+│       ├── test/
+│       │   ├── images/
+│       │   └── labels/
+│       ├── train/
+│       │   ├── images/
+│       │   └── labels/
+│       └── valid/
+│           ├── images/
+│           └── labels/
 │
 ├── models/
-│   ├── yolo/                # YOLO model files
-│   └── weights/             # Trained model weights
-│       └── best.pt          # Best trained model
-│
-├── src/
-│   ├── detection/
-│   │   └── yolo_detector.py # YOLO-based detection module
-│   │
-│   ├── tracking/
-│   │   ├── player_tracker.py    # Player tracking
-│   │   └── shuttle_tracker.py   # Shuttle tracking
-│   │
-│   ├── analytics/
-│   │   ├── metrics.py           # Player metrics calculation
-│   │   ├── rally_detection.py   # Rally segmentation
-│   │   └── heatmap.py           # Heatmap generation
-│   │
-│   ├── utils/
-│   │   ├── video_utils.py       # Video processing utilities
-│   │   ├── drawing.py           # Drawing and visualization
-│   │   ├── homography.py        # Homography transformation
-│   │   └── roi_selector.py      # Region of interest selection
-│   │
-│   └── main.py                  # Main entry point
+│   ├── weights/
+│   │   └── shuttle_best.pt  # Best trained shuttlecock model
+│   └── yolo/                # YOLO model files
 │
 ├── outputs/
-│   ├── videos/              # Processed output videos
+│   ├── heatmaps/            # Generated heatmaps
 │   ├── logs/                # Log files
-│   └── heatmaps/            # Generated heatmaps
+│   └── videos/              # Processed output videos
 │
+├── runs/
+│   └── detect/              # YOLO detection runs
+│       └── models/
+│           └── yolo/
+│               └── shuttle_detector/
+│
+├── src/
+│   ├── main.py              # Main entry point
+│   ├── yolov8n.pt           # YOLOv8 nano model
+│   ├── analytics/
+│   │   ├── heatmap.py       # Heatmap generation
+│   │   ├── metrics.py       # Player metrics calculation
+│   │   └── rally_detection.py # Rally segmentation
+│   ├── configs/             # Configuration files
+│   ├── detection/
+│   │   └── yolo_detector.py # YOLO-based detection module
+│   ├── tracking/
+│   │   ├── player_tracker.py # Player tracking
+│   │   └── shuttle_tracker.py # Shuttle tracking
+│   └── utils/
+│       ├── drawing.py       # Drawing and visualization
+│       ├── homography.py    # Homography transformation
+│       ├── roi_filter.py    # Region of interest filtering
+│       ├── roi_selector.py  # Region of interest selection
+│       └── video_utils.py   # Video processing utilities
+│
+├── folder-structure.txt     # Folder structure documentation
+├── plan.txt                 # Project plan
 ├── requirements.txt         # Python dependencies
+├── yolov8n.pt               # YOLOv8 nano model (duplicate)
 └── README.md               # This file
 ```
 
@@ -117,6 +138,8 @@ To train the YOLOv8 model:
 ```bash
 yolo train data=data/shuttlecock/data.yaml model=yolov8n.pt epochs=100
 ```
+
+The trained model weights will be saved in `models/weights/shuttle_best.pt`.
 
 ## Results
 

@@ -21,8 +21,10 @@ COURT_ROI = [
 def main():
     cap = load_video(VIDEO_PATH)
     player_tracker = PlayerTracker("yolov8n.pt")
-    detector = YOLODetector("yolov8n.pt")       # replace with custom model later
+    # detector = YOLODetector("yolov8n.pt")       # replace with custom model later
+    SHUTTLE_MODEL = os.path.join(BASE_DIR, "models", "shuttle_best.pt")  # update with actual model path
     shuttle_tracker = ShuttleTracker(trail_length=30)
+    detector = YOLODetector(SHUTTLE_MODEL)
 
     fps = cap.get(cv2.CAP_PROP_FPS)
     delay = int(1000 / fps) if fps > 0 else 30
