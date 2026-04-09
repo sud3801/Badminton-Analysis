@@ -1,17 +1,18 @@
 from utils.video_utils import load_video, read_frame, release_video
 from tracking.player_tracker import PlayerTracker
+from tracking.player_manager import PlayerManager
 from detection.yolo_detector import YOLODetector
 from tracking.shuttle_tracker import ShuttleTracker
-from utils.drawing import draw_tracks, draw_shuttle
+from utils.drawing import draw_stable_players, draw_shuttle
 from utils.roi_filter import filter_tracks_by_roi, draw_court_roi
 
 import cv2
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "sample.mp4")
+VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "INDvsDEN.mp4")
 
-COURT_ROI = [(180, 141), (467, 139), (595, 358), (69, 358)]
+COURT_ROI = [(429, 234), (926, 234), (1172, 713), (201, 712)]
 
 def main():
     cap = load_video(VIDEO_PATH)
@@ -20,10 +21,12 @@ def main():
     SHUTTLE_MODEL = os.path.join(BASE_DIR, "models", "weights", "shuttle_best.pt")
     detector = YOLODetector(SHUTTLE_MODEL)
     shuttle_tracker = ShuttleTracker(trail_length=30)
+    player_manager = PlayerManager(court_roi=COURT_ROI)
 
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    delay = int(1000 / fps) if fps > 0 else 30
-    print(f"FPS: {fps}")
+    DESIRED_FPS = 8  # ← Change this value to your desired FPS
+    fps = DESIRED_FPS
+    delay = int(1000 / fps)
+    print(f"Display FPS: {fps} (delay: {delay}ms)")
 
     while True:
         ret, frame = read_frame(cap)
@@ -31,8 +34,9 @@ def main():
             break
 
         # --- Player tracking ---
-        tracks = player_tracker.track(frame)
-        tracks = filter_tracks_by_roi(tracks, COURT_ROI)
+        raw_tracks = player_tracker.track(frame)
+        raw_tracks = filter_tracks_by_roi(raw_tracks, COURT_ROI)
+        players = player_manager.update(raw_tracks)
 
         # --- Shuttle detection + Kalman tracking ---
         _, shuttles = detector.detect(frame)
@@ -42,7 +46,8 @@ def main():
 
         # --- Draw everything ---
         frame = draw_court_roi(frame, COURT_ROI)
-        frame = draw_tracks(frame, tracks)
+        #frame = draw_tracks(frame, tracks)
+        frame = draw_stable_players(frame, players) 
         frame = draw_shuttle(frame, shuttle_pos, trail)
 
         cv2.imshow("Badminton Analysis", frame)

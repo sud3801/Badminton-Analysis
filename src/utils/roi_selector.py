@@ -40,6 +40,6 @@ def select_roi(video_path):
 if __name__ == "__main__":
     import os
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "sample.mp4")
+    VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "INDvsDEN.mp4")
     pts = select_roi(VIDEO_PATH)
     print("\nCopy this into your config:\nCOURT_ROI =", pts)
