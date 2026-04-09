@@ -14,24 +14,34 @@ VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "INDvsDEN.mp4")
 
 COURT_ROI = [(429, 234), (926, 234), (1172, 713), (201, 712)]
 
+xs = [p[0] for p in COURT_ROI]
+ys = [p[1] for p in COURT_ROI]
+COURT_BOUNDS = (min(xs), min(ys), max(xs), max(ys))
+
+
 def main():
     cap = load_video(VIDEO_PATH)
-    player_tracker = PlayerTracker("yolov8n.pt")
+    player_tracker = PlayerTracker("yolov8s.pt")
     # detector = YOLODetector("yolov8n.pt")       # replace with custom model later
     SHUTTLE_MODEL = os.path.join(BASE_DIR, "models", "weights", "shuttle_best.pt")
     detector = YOLODetector(SHUTTLE_MODEL)
     shuttle_tracker = ShuttleTracker(trail_length=30)
-    player_manager = PlayerManager(court_roi=COURT_ROI)
+    player_manager = PlayerManager(court_roi=COURT_ROI, reidentify_dist=180) # adjust reidentify_dist as needed
 
-    DESIRED_FPS = 8  # ← Change this value to your desired FPS
+    DESIRED_FPS = 25  # ← Change this value to your desired FPS
     fps = DESIRED_FPS
     delay = int(1000 / fps)
     print(f"Display FPS: {fps} (delay: {delay}ms)")
+
+    PROCESS_WIDTH = 1280
 
     while True:
         ret, frame = read_frame(cap)
         if not ret:
             break
+
+        scale = PROCESS_WIDTH / frame.shape[1]
+        frame = cv2.resize(frame, (PROCESS_WIDTH, int(frame.shape[0] * scale)))
 
         # --- Player tracking ---
         raw_tracks = player_tracker.track(frame)

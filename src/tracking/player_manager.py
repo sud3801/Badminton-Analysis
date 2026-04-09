@@ -70,17 +70,27 @@ class PlayerManager:
 
     def _try_reidentify(self, track):
         """
-        Match an incoming ByteTrack track to an existing stable player
-        using proximity. Returns label "A"/"B" or None.
+        Match using BOTH proximity AND court half.
+        Court half is weighted more heavily — prevents swaps at net.
         """
         best_label = None
-        best_dist  = self.reidentify_dist  # threshold
+        best_score= float('inf')
+        center    = self._bbox_center(track["bbox"])
+        half      = self._court_half(track["bbox"])
 
-        center = self._bbox_center(track["bbox"])
         for label, player in self.players.items():
-            d = self._dist(center, player["center"])
-            if d < best_dist:
-                best_dist  = d
+            dist = self._dist(center, player["center"])
+
+            # Hard reject if too far
+            if dist > self.reidentify_dist:
+                continue
+
+            # Penalty if court half doesn't match
+            half_penalty = 0 if half == self._court_half(player["bbox"]) else 80
+
+            score = dist + half_penalty
+            if score < best_score:
+                best_score = score
                 best_label = label
 
         return best_label

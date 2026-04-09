@@ -87,3 +87,23 @@ class ShuttleTracker:
         self.trail.clear()
         self.initialized = False
         self.lost_count = 0
+
+        # Add court bounds to ShuttleTracker.__init__
+def __init__(self, trail_length=30, court_bounds=None):
+    ...
+    self.court_bounds = court_bounds  # (x_min, y_min, x_max, y_max)
+
+# Update the return value in update()
+def update(self, detection=None):
+    ...
+    x = int(self.kf.x[0])
+    y = int(self.kf.x[1])
+
+    # Clamp to court bounds if provided
+    if self.court_bounds:
+        x_min, y_min, x_max, y_max = self.court_bounds
+        x = max(x_min, min(x_max, x))
+        y = max(y_min, min(y_max, y))
+
+    self.trail.append((x, y))
+    return (x, y)
