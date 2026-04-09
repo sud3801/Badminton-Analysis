@@ -11,17 +11,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VIDEO_PATH = os.path.join(BASE_DIR, "data", "raw_videos", "sample.mp4")
 
-COURT_ROI = [
-    (320, 80),
-    (960, 80),
-    (1100, 650),
-    (180, 650),
-]
+COURT_ROI = [(180, 141), (467, 139), (595, 358), (69, 358)]
 
 def main():
     cap = load_video(VIDEO_PATH)
     player_tracker = PlayerTracker("yolov8n.pt")
-    detector = YOLODetector("yolov8n.pt")       # replace with custom model later
+    # detector = YOLODetector("yolov8n.pt")       # replace with custom model later
+    SHUTTLE_MODEL = os.path.join(BASE_DIR, "models", "weights", "shuttle_best.pt")
+    detector = YOLODetector(SHUTTLE_MODEL)
     shuttle_tracker = ShuttleTracker(trail_length=30)
 
     fps = cap.get(cv2.CAP_PROP_FPS)

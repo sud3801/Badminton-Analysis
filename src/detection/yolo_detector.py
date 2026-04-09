@@ -4,7 +4,8 @@ from ultralytics import YOLO
 # Update these class IDs based on your trained model
 # For now using COCO defaults (person=0); shuttle needs custom model
 PERSON_CLASS_ID = 0
-SHUTTLE_CLASS_ID = 1  # update after training custom model
+#SHUTTLE_CLASS_ID = 1  # update after training custom model
+SHUTTLE_CLASS_ID = 0  # placeholder until we have a shuttle model
 
 class YOLODetector:
     def __init__(self, model_path="yolov8n.pt"):
